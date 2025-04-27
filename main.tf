@@ -34,7 +34,8 @@ resource "aws_subnet" "private" {
   count             = length(var.private_subnet_cidrs)
   vpc_id            = aws_vpc.dreVpc.id
   cidr_block        = var.private_subnet_cidrs[count.index]
-  availability_zone = var.availability_zones[count.index]
+  availability_zone = element(var.availability_zones, count.index % 2)
+
 }
 
 resource "aws_route_table" "publicRTB" {
@@ -46,7 +47,7 @@ resource "aws_route_table" "publicRTB" {
   }
 }
 resource "aws_route_table" "privateRTB" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.dreVpc.id
 }
 
 
